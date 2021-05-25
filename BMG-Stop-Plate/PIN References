@@ -1,0 +1,9 @@
+Start = D2
+Stop = D3
+Back = D4
+Forward = D5
+Buzzer = D6
+LED Data = D7
+D8 = Sensitivity up
+D9 = Sensitivity Down
+A0 = Sensor
