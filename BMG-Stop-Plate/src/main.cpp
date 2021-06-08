@@ -59,25 +59,22 @@
 
 // REGION | Global Variables
 
-  TimerStateTypes TS_Status = TimerStateTypes::TS_IDLE;
+  TimerStateTypes TS_Status;
 
   unsigned long START_TIME;
   bool TIME_RECORDED;
 
-  float HIT_MEMORY[128];
+  unsigned long HIT_MEMORY[128];
   uint8_t HIT_MEMORY_CURSOR = 0;
   uint8_t HIT_COUNT = 0;
 
-  long LED_Idle_Colour = CRGB::Orange;
-  long LED_Timing_Colour = CRGB::White;
-  long LED_Hit_Colour_Primary = CRGB::Blue;
-  long LED_Hit_Colour_Secondary = CRGB::Green;
-
-  int SENSITIVITY_INTERALS = 10;
+  int SENSITIVITY_INTERALS = 5;
   int CURRENT_SENSITIVITY = 100;
   int MAX_SENSITIVITY = 200; 
 
   int BUZZER_TIME = 750;
+
+  bool LED_HIT_STAGE;
 
   unsigned long LED_White_End; 
   int LED_White_Count;
@@ -106,23 +103,6 @@
   void LedWhite() {
     leds[0] = CRGB::White;
     FastLED.show();
-  }
-
-  void LedWhiteBlink(int interval, int count) {
-    LED_White_End = millis() + interval;
-    LED_White_Count = count;
-  }
-
-  void LedWhiteBlinkProcess()
-  {
-    if (LED_White_End > millis())
-    {
-      leds[0] = CRGB::White;
-      FastLED.show();
-    } else {
-      leds[0] = LED_Idle_Colour;
-      FastLED.show();
-    }
   }
 
   void LedRed() {
@@ -171,6 +151,18 @@
   }
 
   void DisplayTimeRecorded(String hitNo, String seconds, String centiSecond) {
+    if (hitNo.length() == 1) {
+      hitNo = "0" + hitNo;
+    }
+
+    if (seconds.length() == 1) {
+      seconds = "0" + seconds;
+    }
+
+    if (centiSecond.length() == 1) {
+      centiSecond = "0" + centiSecond;
+    }
+
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
@@ -178,8 +170,15 @@
     oled.println();
     oled.println();
     oled.set2X();
-    oled.setFont(Arial_bold_14);
-    oled.print(" " + hitNo + "  |");
+    oled.setFont(Arial_bold_14); 
+    oled.print(" " + hitNo);
+
+    if (seconds.length() == 3) {
+      oled.print(" ");
+    } else {
+      oled.print("  ");
+    }
+    
     oled.print(" " + seconds);
     oled.set1X();
     oled.println("." + centiSecond); 
@@ -190,7 +189,7 @@
   }
 
   void DisplaySensitivityChanged() {
-    String currentValue = String((MAX_SENSITIVITY - CURRENT_SENSITIVITY)/SENSITIVITY_INTERALS);
+    String currentValue = String(((MAX_SENSITIVITY+SENSITIVITY_INTERALS) - CURRENT_SENSITIVITY)/SENSITIVITY_INTERALS);
     String maxValue = String(MAX_SENSITIVITY/SENSITIVITY_INTERALS);
     oled.clear();    
     oled.setFont(SystemFont5x7);
@@ -209,6 +208,18 @@
   }
 
   void DisplayTimeReview(String hitNo, String seconds, String centiSecond) {
+    if (hitNo.length() == 1) {
+      hitNo = "0" + hitNo;
+    }
+
+    if (seconds.length() == 1) {
+      seconds = "0" + seconds;
+    }
+
+    if (centiSecond.length() == 1) {
+      centiSecond = "0" + centiSecond;
+    }
+
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
@@ -217,8 +228,14 @@
     oled.println();
     oled.set2X();
     oled.setFont(Arial_bold_14);
-    oled.print(" " + hitNo + "  |");
-    oled.print(" " + seconds);
+    oled.print(" " + hitNo);
+
+    if (seconds.length() == 3) {
+      oled.print(" ");
+    } else {
+      oled.print("   ");
+    }
+    oled.print(seconds);
     oled.set1X();
     oled.println("." + centiSecond);  
     oled.println();
@@ -242,71 +259,22 @@
     oled.println(message);
   }
 
+// REGION | Set Timer State Functions
 
-// REGION | Input Functions
+  void SetTimerIdle() {
+    LedOrange();
+    TS_Status = TimerStateTypes::TS_IDLE;
+  }
 
-  // void StartPressed() {
-  //   int val = digitalRead(BTN_Start);
-  //   if (val == LOW) {
-  //     SW_State_Start = true;
-  //   } else if (SW_State_Start) {
-  //     DisplayTimeRecorded("01", "003", "76");
-  //     SoundBuzzer();
-  //     LedWhiteBlink(1000, 5);
-  //     SW_State_Start = false;
-  //   }
-  // }
+  void SetTimerTiming() {
+    LedWhite();
+    TS_Status = TimerStateTypes::TS_TIMING;
+  }
 
-  // void StopPressed() {
-  //   int val = digitalRead(BTN_Stop);
-  //   if (val == LOW) {
-  //     SW_State_Stop = true;
-  //   } else if (SW_State_Stop) {
-  //     DisplayStartTimer();
-  //     LedOrange();
-  //     SW_State_Stop = false;
-  //   }
-  // }
-
-  // void ForwardPressed() {
-  //   int val = digitalRead(BTN_Forward);
-  //   if (val == LOW) {
-  //     SW_State_Forward = true;
-  //   } else if (SW_State_Forward) {
-  //     DisplayTimeReview("03", "012", "13");
-  //     SW_State_Forward = false;
-  //   }
-  // }
-
-  // void BackPressed() {
-  //   int val = digitalRead(BTN_Back);
-  //   if (val == LOW) {
-  //     SW_State_Back = true;
-  //   } else if (SW_State_Back) {
-  //     DisplayDebugMessage("BACK PRESSED");
-  //     SW_State_Back = false;
-  //   }
-  // }
-
-  // void SenseUpPressed() {
-  //   int val = digitalRead(BTN_SenseUp);
-  //   if (val == LOW) {
-  //     SW_State_SenseUp = true;
-  //   } else if (SW_State_SenseUp) {
-  //     DisplaySensitivityChanged();
-  //     SW_State_SenseUp = false;
-  //   }
-  // }
-
-  // void SenseDwPressed() {
-  //   int val = digitalRead(BTN_SenseDw);
-  //   if (val == LOW) {
-  //     SW_State_SenseDw = true;
-  //   } else if (SW_State_SenseDw) {
-  //     DisplayDebugMessage("SENSEDW PRESSED");
-  //     SW_State_SenseDw = false;
-  //   }
-  // }
+  void SetTimerReview() {
+    LedOrange();
+    TS_Status = TimerStateTypes::TS_REVIEW;
+  }
 
 // REGION | Functions
 
@@ -318,7 +286,6 @@
       SW_State_Start = true;
     } else if (SW_State_Start) {      
       SW_State_Start = false;
-      //DisplayDebugMessage("BTNSTARTPRESSED");
       return ButtonPressed::BTN_START;
     }
 
@@ -327,7 +294,6 @@
       SW_State_Stop = true;
     } else if (SW_State_Stop) {      
       SW_State_Stop = false;
-      //DisplayDebugMessage("BTNSTOPPRESSED");
       return ButtonPressed::BTN_STOP;
     }
 
@@ -336,7 +302,6 @@
       SW_State_Forward = true;
     } else if (SW_State_Forward) {      
       SW_State_Forward = false;
-      //DisplayDebugMessage("BTNFORWARDPRESSED");
       return ButtonPressed::BTN_FORWARD;
     }
 
@@ -345,7 +310,6 @@
       SW_State_Back = true;
     } else if (SW_State_Back) {      
       SW_State_Back = false;
-      //DisplayDebugMessage("BTNBACKWARDPRESSED");
       return ButtonPressed::BTN_BACK;
     }
 
@@ -354,7 +318,6 @@
       SW_State_SenseUp = true;
     } else if (SW_State_SenseUp) {      
       SW_State_SenseUp = false;
-      //DisplayDebugMessage("BTNSENSEUPPRESSED");
       return ButtonPressed::BTN_SENSITIVTY_UP;
     }
 
@@ -363,7 +326,6 @@
       SW_State_SenseDw = true;
     } else if (SW_State_SenseDw) {      
       SW_State_SenseDw = false;
-      //DisplayDebugMessage("BTNSENSEDWNPRESSED");
       return ButtonPressed::BTN_SENSITIVTY_DWN;
     }
 
@@ -375,20 +337,26 @@
   }
 
   void StartTimer() {    
-    DisplayTimeRecorded("0", "000", "00");
+    DisplayTimeRecorded("00", "00", "00");
     START_TIME = millis();
-    SoundBuzzer();
+    //SoundBuzzer();
     TIME_RECORDED = false;
   }
 
   void ShowReview() {
-    if (!TIME_RECORDED)
+    if ((HIT_COUNT == 0) or (!TIME_RECORDED && TS_Status == TimerStateTypes::TS_TIMING)) {
+      SetTimerIdle();
+      ShowStart();
       return;
+    }
+      
+    SetTimerReview();
 
     String hitNo = String(HIT_MEMORY_CURSOR);
-    float reviewTime = HIT_MEMORY[HIT_MEMORY_CURSOR];
-    String seconds = String(reviewTime / 1000, 0);
-    String centiSecond = String((reviewTime / 10) - ((reviewTime / 1000) * 100), 0);
+    unsigned long reviewTime = HIT_MEMORY[HIT_MEMORY_CURSOR-1];
+
+    String seconds = String(reviewTime / 100);
+    String centiSecond = String(reviewTime - ((reviewTime / 100) * 100));
     DisplayTimeReview(hitNo, seconds, centiSecond);
   }
 
@@ -400,7 +368,7 @@
   }
 
   void MoveReviewBackward() {
-    if (HIT_MEMORY_CURSOR == 0)
+    if (HIT_MEMORY_CURSOR == 1)
       return;
 
     HIT_MEMORY_CURSOR -= 1;
@@ -428,14 +396,38 @@
     if (!TIME_RECORDED) {
       TIME_RECORDED = true;
       HIT_COUNT = 0;
+      HIT_MEMORY_CURSOR = 0;
+      LED_HIT_STAGE = true;
     } 
-    DisplayDebugMessage("Stop Plate Hit");
-    int currentTime = millis();
+
+    if (LED_HIT_STAGE) {
+      LedBlue();
+    } else {
+      LedGreen();
+    }
+
+    LED_HIT_STAGE = !LED_HIT_STAGE;
+
+    unsigned long currentTime = millis();
+    unsigned long splitTime = (currentTime - START_TIME) / 10;
+
+    HIT_MEMORY_CURSOR++;
+    HIT_COUNT = HIT_MEMORY_CURSOR;
+    HIT_MEMORY[HIT_MEMORY_CURSOR-1] = splitTime;
+
+    String hitNo = String(HIT_MEMORY_CURSOR);
+    unsigned long reviewTime = HIT_MEMORY[HIT_MEMORY_CURSOR-1];
+
+    String seconds = String(reviewTime / 100);
+    String centiSecond = String(reviewTime - ((reviewTime / 100) * 100));
+
+    Serial.println();
+
+    DisplayTimeRecorded(hitNo, seconds, centiSecond);
   }
 
   void CheckStopPlateHit() {
     int piezoSensor = analogRead(IO_Sensor);
-    Serial.println(piezoSensor);
     if (piezoSensor >= CURRENT_SENSITIVITY) {
       RecordStopPlateHit();
     }
@@ -446,14 +438,12 @@
     switch (button)
     {
       case ButtonPressed::BTN_START:
-        LedWhite();
-        TS_Status = TimerStateTypes::TS_TIMING;
+        SetTimerTiming();
         StartTimer();        
         break;
       case ButtonPressed::BTN_STOP:
         ShowReview();
-        LedOrange();
-        TS_Status = TimerStateTypes::TS_REVIEW;
+        SetTimerReview();
         break;
       case ButtonPressed::BTN_FORWARD:
         // Do Nothing
@@ -481,10 +471,8 @@
       case ButtonPressed::BTN_START:
         // Do Nothing
         break;
-      case ButtonPressed::BTN_STOP:
-        ShowReview();
-        LedOrange();
-        TS_Status = TimerStateTypes::TS_REVIEW;
+      case ButtonPressed::BTN_STOP:        
+        ShowReview();        
         break;
       case ButtonPressed::BTN_FORWARD:
         // Do Nothing
@@ -509,26 +497,22 @@
     switch (button)
     {
       case ButtonPressed::BTN_START:
-        StartTimer();
-        LedWhite();
-        TS_Status = TimerStateTypes::TS_TIMING;
+        SetTimerTiming();
+        StartTimer();  
         break;
       case ButtonPressed::BTN_STOP:
         ShowStart();
-        LedOrange();
-        TS_Status = TimerStateTypes::TS_IDLE;
+        SetTimerIdle();
         break;
-      case ButtonPressed::BTN_FORWARD:        
-        ShowReview();
+      case ButtonPressed::BTN_FORWARD:
         MoveReviewForward();
-        LedOrange();
-        TS_Status = TimerStateTypes::TS_REVIEW;
+        ShowReview();
+        SetTimerReview();
         break;
       case ButtonPressed::BTN_BACK:
-        ShowReview();
         MoveReviewBackward();
-        LedOrange();
-        TS_Status = TimerStateTypes::TS_REVIEW;
+        ShowReview();
+        SetTimerReview();
         break;
         break;
       case ButtonPressed::BTN_SENSITIVTY_UP:
@@ -582,8 +566,7 @@
     FastLED.setBrightness(  BRIGHTNESS );
     
     // Timer State Setup
-    LedOrange();
-    TS_Status = TimerStateTypes::TS_IDLE;
+    SetTimerIdle();
   }
 
 // REGION | Loop
