@@ -74,7 +74,7 @@
   long LED_Hit_Colour_Secondary = CRGB::Green;
 
   int SENSITIVITY_INTERALS = 10;
-  int CURRENT_SENSITIVITY = 50;
+  int CURRENT_SENSITIVITY = 100;
   int MAX_SENSITIVITY = 200; 
 
   int BUZZER_TIME = 750;
@@ -190,8 +190,8 @@
   }
 
   void DisplaySensitivityChanged() {
-    String currentValue = String(MAX_SENSITIVITY - CURRENT_SENSITIVITY);
-    String maxValue = String(MAX_SENSITIVITY);
+    String currentValue = String((MAX_SENSITIVITY - CURRENT_SENSITIVITY)/SENSITIVITY_INTERALS);
+    String maxValue = String(MAX_SENSITIVITY/SENSITIVITY_INTERALS);
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
