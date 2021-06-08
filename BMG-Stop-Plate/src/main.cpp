@@ -341,7 +341,7 @@
   void StartTimer() {    
     DisplayTimeRecorded("00", "00", "00");
     START_TIME = millis();
-    //SoundBuzzer();
+    SoundBuzzer();
     TIME_RECORDED = false;
   }
 
