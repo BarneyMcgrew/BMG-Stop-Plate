@@ -75,7 +75,7 @@
 
   int SENSITIVITY_INTERALS = 10;
   int CURRENT_SENSITIVITY = 50;
-  int MAX_SENSITIVITY = 100; 
+  int MAX_SENSITIVITY = 200; 
 
   int BUZZER_TIME = 750;
 
@@ -318,46 +318,52 @@
       SW_State_Start = true;
     } else if (SW_State_Start) {      
       SW_State_Start = false;
+      //DisplayDebugMessage("BTNSTARTPRESSED");
       return ButtonPressed::BTN_START;
     }
 
     val = digitalRead(BTN_Stop);
     if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {      
-      SW_State_Start = false;
+      SW_State_Stop = true;
+    } else if (SW_State_Stop) {      
+      SW_State_Stop = false;
+      //DisplayDebugMessage("BTNSTOPPRESSED");
       return ButtonPressed::BTN_STOP;
     }
 
     val = digitalRead(BTN_Forward);
     if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {      
-      SW_State_Start = false;
+      SW_State_Forward = true;
+    } else if (SW_State_Forward) {      
+      SW_State_Forward = false;
+      //DisplayDebugMessage("BTNFORWARDPRESSED");
       return ButtonPressed::BTN_FORWARD;
     }
 
     val = digitalRead(BTN_Back);
     if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {      
-      SW_State_Start = false;
+      SW_State_Back = true;
+    } else if (SW_State_Back) {      
+      SW_State_Back = false;
+      //DisplayDebugMessage("BTNBACKWARDPRESSED");
       return ButtonPressed::BTN_BACK;
     }
 
     val = digitalRead(BTN_SenseUp);
     if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {      
-      SW_State_Start = false;
+      SW_State_SenseUp = true;
+    } else if (SW_State_SenseUp) {      
+      SW_State_SenseUp = false;
+      //DisplayDebugMessage("BTNSENSEUPPRESSED");
       return ButtonPressed::BTN_SENSITIVTY_UP;
     }
 
     val = digitalRead(BTN_SenseDw);
     if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {      
-      SW_State_Start = false;
+      SW_State_SenseDw = true;
+    } else if (SW_State_SenseDw) {      
+      SW_State_SenseDw = false;
+      //DisplayDebugMessage("BTNSENSEDWNPRESSED");
       return ButtonPressed::BTN_SENSITIVTY_DWN;
     }
 
