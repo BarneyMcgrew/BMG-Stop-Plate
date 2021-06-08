@@ -448,7 +448,8 @@
         break;
       case ButtonPressed::BTN_STOP:
         ShowReview();
-        SetTimerReview();
+        if (HIT_COUNT > 0) 
+          SetTimerReview();
         break;
       case ButtonPressed::BTN_FORWARD:
         // Do Nothing
