@@ -61,10 +61,22 @@
 
   TimerStateTypes TS_Status = TimerStateTypes::TS_IDLE;
 
-  float HIT_MEMORY[128];
+  unsigned long START_TIME;
+  bool TIME_RECORDED;
 
+  float HIT_MEMORY[128];
+  uint8_t HIT_MEMORY_CURSOR = 0;
+  uint8_t HIT_COUNT = 0;
 
   long LED_Idle_Colour = CRGB::Orange;
+  long LED_Timing_Colour = CRGB::White;
+  long LED_Hit_Colour_Primary = CRGB::Blue;
+  long LED_Hit_Colour_Secondary = CRGB::Green;
+
+  int SENSITIVITY_INTERALS = 10;
+  int CURRENT_SENSITIVITY = 50;
+  int MAX_SENSITIVITY = 100; 
+
   int BUZZER_TIME = 750;
 
   unsigned long LED_White_End; 
@@ -177,7 +189,9 @@
     oled.println("       Press Stop When Done");
   }
 
-  void DisplaySensitivityChanged(String currentValue, String maxValue) {
+  void DisplaySensitivityChanged() {
+    String currentValue = String(MAX_SENSITIVITY - CURRENT_SENSITIVITY);
+    String maxValue = String(MAX_SENSITIVITY);
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
@@ -279,7 +293,7 @@
     if (val == LOW) {
       SW_State_SenseUp = true;
     } else if (SW_State_SenseUp) {
-      DisplaySensitivityChanged("05", "10");
+      DisplaySensitivityChanged();
       SW_State_SenseUp = false;
     }
   }
@@ -297,7 +311,55 @@
 // REGION | Functions
 
   ButtonPressed GetButtonPressed() {
-    // return which button has been pressed
+
+    int val = digitalRead(BTN_Start);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_START;
+    }
+
+    int val = digitalRead(BTN_Stop);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_STOP;
+    }
+
+    int val = digitalRead(BTN_Forward);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_FORWARD;
+    }
+
+    int val = digitalRead(BTN_Back);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_BACK;
+    }
+
+    int val = digitalRead(BTN_SenseUp);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_SENSITIVTY_UP;
+    }
+
+    int val = digitalRead(BTN_SenseDw);
+    if (val == LOW) {
+      SW_State_Start = true;
+    } else if (SW_State_Start) {      
+      SW_State_Start = false;
+      return ButtonPressed::BTN_SENSITIVTY_DWN;
+    }
+
     return ButtonPressed::BTN_NONE;
   }
 
@@ -306,35 +368,65 @@
   }
 
   void StartTimer() {
-
+    START_TIME = millis();
+    SoundBuzzer();
+    TIME_RECORDED = false;
+    DisplayTimeRecorded("0", "000", "00");
   }
 
   void ShowReview() {
+    if (!TIME_RECORDED)
+      return;
 
+    String hitNo = String(HIT_MEMORY_CURSOR);
+    float reviewTime = HIT_MEMORY[HIT_MEMORY_CURSOR];
+    String seconds = String(reviewTime / 1000, 0);
+    String centiSecond = String((reviewTime / 10) - ((reviewTime / 1000) * 100), 0);
+    DisplayTimeReview(hitNo, seconds, centiSecond);
   }
 
   void MoveReviewForward() {
+    if (HIT_MEMORY_CURSOR == HIT_COUNT)
+      return;
 
+    HIT_MEMORY_CURSOR += 1;
   }
 
   void MoveReviewBackward() {
+    if (HIT_MEMORY_CURSOR == 0)
+      return;
 
+    HIT_MEMORY_CURSOR -= 1;
   }
 
   void ShowSensitivity() {
-    
+    DisplaySensitivityChanged();
   }
 
   void SetSensitivityUp() {
+    if (CURRENT_SENSITIVITY == SENSITIVITY_INTERALS)
+      return;
 
+    CURRENT_SENSITIVITY -= SENSITIVITY_INTERALS;
   }
 
   void SetSensitivityDwn() {
+    if (CURRENT_SENSITIVITY == MAX_SENSITIVITY)
+      return;
 
+    CURRENT_SENSITIVITY += SENSITIVITY_INTERALS;
+  }
+
+  void RecordStopPlateHit() {
+    //record stop plate hit
   }
 
   void CheckStopPlateHit() {
-    
+    int piezoSensor = digitalRead(IO_Sensor);
+
+    if (piezoSensor >= CURRENT_SENSITIVITY) {
+      RecordStopPlateHit();
+    }
   }
 
 // REGION | State Functions
