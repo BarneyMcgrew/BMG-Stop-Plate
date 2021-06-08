@@ -223,7 +223,7 @@
     oled.println("." + centiSecond);  
     oled.println();
     oled.println();
-    oled.setFont(Iain5x7);
+    oled.setFont(Iain5x7);    
     oled.println("       Press Start When Ready");
   }
 
@@ -245,68 +245,68 @@
 
 // REGION | Input Functions
 
-  void StartPressed() {
-    int val = digitalRead(BTN_Start);
-    if (val == LOW) {
-      SW_State_Start = true;
-    } else if (SW_State_Start) {
-      DisplayTimeRecorded("01", "003", "76");
-      SoundBuzzer();
-      LedWhiteBlink(1000, 5);
-      SW_State_Start = false;
-    }
-  }
+  // void StartPressed() {
+  //   int val = digitalRead(BTN_Start);
+  //   if (val == LOW) {
+  //     SW_State_Start = true;
+  //   } else if (SW_State_Start) {
+  //     DisplayTimeRecorded("01", "003", "76");
+  //     SoundBuzzer();
+  //     LedWhiteBlink(1000, 5);
+  //     SW_State_Start = false;
+  //   }
+  // }
 
-  void StopPressed() {
-    int val = digitalRead(BTN_Stop);
-    if (val == LOW) {
-      SW_State_Stop = true;
-    } else if (SW_State_Stop) {
-      DisplayStartTimer();
-      LedOrange();
-      SW_State_Stop = false;
-    }
-  }
+  // void StopPressed() {
+  //   int val = digitalRead(BTN_Stop);
+  //   if (val == LOW) {
+  //     SW_State_Stop = true;
+  //   } else if (SW_State_Stop) {
+  //     DisplayStartTimer();
+  //     LedOrange();
+  //     SW_State_Stop = false;
+  //   }
+  // }
 
-  void ForwardPressed() {
-    int val = digitalRead(BTN_Forward);
-    if (val == LOW) {
-      SW_State_Forward = true;
-    } else if (SW_State_Forward) {
-      DisplayTimeReview("03", "012", "13");
-      SW_State_Forward = false;
-    }
-  }
+  // void ForwardPressed() {
+  //   int val = digitalRead(BTN_Forward);
+  //   if (val == LOW) {
+  //     SW_State_Forward = true;
+  //   } else if (SW_State_Forward) {
+  //     DisplayTimeReview("03", "012", "13");
+  //     SW_State_Forward = false;
+  //   }
+  // }
 
-  void BackPressed() {
-    int val = digitalRead(BTN_Back);
-    if (val == LOW) {
-      SW_State_Back = true;
-    } else if (SW_State_Back) {
-      DisplayDebugMessage("BACK PRESSED");
-      SW_State_Back = false;
-    }
-  }
+  // void BackPressed() {
+  //   int val = digitalRead(BTN_Back);
+  //   if (val == LOW) {
+  //     SW_State_Back = true;
+  //   } else if (SW_State_Back) {
+  //     DisplayDebugMessage("BACK PRESSED");
+  //     SW_State_Back = false;
+  //   }
+  // }
 
-  void SenseUpPressed() {
-    int val = digitalRead(BTN_SenseUp);
-    if (val == LOW) {
-      SW_State_SenseUp = true;
-    } else if (SW_State_SenseUp) {
-      DisplaySensitivityChanged();
-      SW_State_SenseUp = false;
-    }
-  }
+  // void SenseUpPressed() {
+  //   int val = digitalRead(BTN_SenseUp);
+  //   if (val == LOW) {
+  //     SW_State_SenseUp = true;
+  //   } else if (SW_State_SenseUp) {
+  //     DisplaySensitivityChanged();
+  //     SW_State_SenseUp = false;
+  //   }
+  // }
 
-  void SenseDwPressed() {
-    int val = digitalRead(BTN_SenseDw);
-    if (val == LOW) {
-      SW_State_SenseDw = true;
-    } else if (SW_State_SenseDw) {
-      DisplayDebugMessage("SENSEDW PRESSED");
-      SW_State_SenseDw = false;
-    }
-  }
+  // void SenseDwPressed() {
+  //   int val = digitalRead(BTN_SenseDw);
+  //   if (val == LOW) {
+  //     SW_State_SenseDw = true;
+  //   } else if (SW_State_SenseDw) {
+  //     DisplayDebugMessage("SENSEDW PRESSED");
+  //     SW_State_SenseDw = false;
+  //   }
+  // }
 
 // REGION | Functions
 
@@ -374,11 +374,11 @@
     DisplayStartTimer();
   }
 
-  void StartTimer() {
+  void StartTimer() {    
+    DisplayTimeRecorded("0", "000", "00");
     START_TIME = millis();
     SoundBuzzer();
     TIME_RECORDED = false;
-    DisplayTimeRecorded("0", "000", "00");
   }
 
   void ShowReview() {
@@ -429,13 +429,13 @@
       TIME_RECORDED = true;
       HIT_COUNT = 0;
     } 
-
+    DisplayDebugMessage("Stop Plate Hit");
     int currentTime = millis();
   }
 
   void CheckStopPlateHit() {
     int piezoSensor = digitalRead(IO_Sensor);
-
+    Serial.println(piezoSensor);
     if (piezoSensor >= CURRENT_SENSITIVITY) {
       RecordStopPlateHit();
     }
@@ -446,11 +446,13 @@
     switch (button)
     {
       case ButtonPressed::BTN_START:
-        StartTimer();
+        LedWhite();
         TS_Status = TimerStateTypes::TS_TIMING;
+        StartTimer();        
         break;
       case ButtonPressed::BTN_STOP:
         ShowReview();
+        LedOrange();
         TS_Status = TimerStateTypes::TS_REVIEW;
         break;
       case ButtonPressed::BTN_FORWARD:
@@ -481,6 +483,7 @@
         break;
       case ButtonPressed::BTN_STOP:
         ShowReview();
+        LedOrange();
         TS_Status = TimerStateTypes::TS_REVIEW;
         break;
       case ButtonPressed::BTN_FORWARD:
@@ -507,20 +510,24 @@
     {
       case ButtonPressed::BTN_START:
         StartTimer();
+        LedWhite();
         TS_Status = TimerStateTypes::TS_TIMING;
         break;
       case ButtonPressed::BTN_STOP:
         ShowStart();
+        LedOrange();
         TS_Status = TimerStateTypes::TS_IDLE;
         break;
       case ButtonPressed::BTN_FORWARD:        
         ShowReview();
         MoveReviewForward();
+        LedOrange();
         TS_Status = TimerStateTypes::TS_REVIEW;
         break;
       case ButtonPressed::BTN_BACK:
         ShowReview();
         MoveReviewBackward();
+        LedOrange();
         TS_Status = TimerStateTypes::TS_REVIEW;
         break;
         break;
@@ -541,6 +548,9 @@
 // REGION | Setup
 
   void setup() {
+    // Serial Debug Setup
+    Serial.begin(9600);
+
     // Wire setup  
     Wire.begin();
     Wire.setClock(400000L);
@@ -555,7 +565,7 @@
     oled.setFont(SystemFont5x7);
 
     DisplaySplashScreen();
-    delay(1500);
+    delay(2000);
     ShowStart();
 
     // IO Setup
@@ -570,9 +580,9 @@
     // LED Setup Test
     FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, NUM_LEDS);
     FastLED.setBrightness(  BRIGHTNESS );
-    LedOrange();
-
+    
     // Timer State Setup
+    LedOrange();
     TS_Status = TimerStateTypes::TS_IDLE;
   }
 
