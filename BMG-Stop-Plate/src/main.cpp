@@ -3,6 +3,7 @@
   #include <SSD1306Ascii.h>
   #include <SSD1306AsciiWire.h>
   #include <FastLED.h>
+  #include <EEPROM.h>
 
 // REGION | Global Definitions
   // 0X3C+SA0 - 0x3C or 0x3D
@@ -11,7 +12,8 @@
   #define NUM_LEDS 1
   #define BRIGHTNESS 255
   #define LED_TYPE WS2812
-  #define COLOR_ORDER RGB
+  #define COLOR_ORDER RGB  
+  #define SENSITIVTY_EEPROM_ADDRESS 200
   CRGB leds[NUM_LEDS];
 
   // Define proper RST_PIN if required.
@@ -376,6 +378,9 @@
 
   void ShowSensitivity() {
     DisplaySensitivityChanged();
+
+    // EEPROM Store
+    EEPROM.write(SENSITIVTY_EEPROM_ADDRESS, CURRENT_SENSITIVITY);
   }
 
   void SetSensitivityUp() {
@@ -534,6 +539,12 @@
   void setup() {
     // Serial Debug Setup
     Serial.begin(9600);
+
+    // Get EEPROM Values
+    int storedSensitivity = EEPROM.read(SENSITIVTY_EEPROM_ADDRESS);
+    if (storedSensitivity > 0 && storedSensitivity <= MAX_SENSITIVITY) {
+      CURRENT_SENSITIVITY = storedSensitivity;
+    }
 
     // Wire setup  
     Wire.begin();
