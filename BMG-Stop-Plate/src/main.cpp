@@ -434,7 +434,7 @@
   }
 
   void CheckStopPlateHit() {
-    int piezoSensor = digitalRead(IO_Sensor);
+    int piezoSensor = analogRead(IO_Sensor);
     Serial.println(piezoSensor);
     if (piezoSensor >= CURRENT_SENSITIVITY) {
       RecordStopPlateHit();
