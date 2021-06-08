@@ -311,8 +311,9 @@
 // REGION | Functions
 
   ButtonPressed GetButtonPressed() {
+    int val;
 
-    int val = digitalRead(BTN_Start);
+    val = digitalRead(BTN_Start);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -320,7 +321,7 @@
       return ButtonPressed::BTN_START;
     }
 
-    int val = digitalRead(BTN_Stop);
+    val = digitalRead(BTN_Stop);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -328,7 +329,7 @@
       return ButtonPressed::BTN_STOP;
     }
 
-    int val = digitalRead(BTN_Forward);
+    val = digitalRead(BTN_Forward);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -336,7 +337,7 @@
       return ButtonPressed::BTN_FORWARD;
     }
 
-    int val = digitalRead(BTN_Back);
+    val = digitalRead(BTN_Back);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -344,7 +345,7 @@
       return ButtonPressed::BTN_BACK;
     }
 
-    int val = digitalRead(BTN_SenseUp);
+    val = digitalRead(BTN_SenseUp);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -352,7 +353,7 @@
       return ButtonPressed::BTN_SENSITIVTY_UP;
     }
 
-    int val = digitalRead(BTN_SenseDw);
+    val = digitalRead(BTN_SenseDw);
     if (val == LOW) {
       SW_State_Start = true;
     } else if (SW_State_Start) {      
@@ -418,7 +419,12 @@
   }
 
   void RecordStopPlateHit() {
-    //record stop plate hit
+    if (!TIME_RECORDED) {
+      TIME_RECORDED = true;
+      HIT_COUNT = 0;
+    } 
+
+    int currentTime = millis();
   }
 
   void CheckStopPlateHit() {
