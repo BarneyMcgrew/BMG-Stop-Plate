@@ -73,6 +73,8 @@
   int SENSITIVITY_INTERALS = 5;
   int CURRENT_SENSITIVITY = 100;
   int MAX_SENSITIVITY = 200; 
+  int POST_HIT_SENSE_DELAY = 200;
+  int POST_START_SENSE_DELAY = 1000;
 
   int BUZZER_TIME = 750;
 
@@ -343,6 +345,9 @@
     START_TIME = millis();
     SoundBuzzer();
     TIME_RECORDED = false;
+
+    // Set Start Timing Delay
+    delay(POST_START_SENSE_DELAY);
   }
 
   void ShowReview() {
@@ -429,6 +434,9 @@
     Serial.println();
 
     DisplayTimeRecorded(hitNo, seconds, centiSecond);
+
+    // Set Hit Sense Delay
+    delay(POST_HIT_SENSE_DELAY);
   }
 
   void CheckStopPlateHit() {
