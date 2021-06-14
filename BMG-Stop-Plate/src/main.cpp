@@ -70,9 +70,10 @@
   uint8_t HIT_MEMORY_CURSOR = 0;
   uint8_t HIT_COUNT = 0;
 
-  int SENSITIVITY_INTERALS = 5;
-  int CURRENT_SENSITIVITY = 100;
-  int MAX_SENSITIVITY = 200; 
+  int OFFSET_SENSITIVITY = 60;
+  int SENSITIVITY_INTERALS = 10;
+  int CURRENT_SENSITIVITY = 200;
+  int MAX_SENSITIVITY = 400; 
 
   int BUZZER_TIME = 750;
 
@@ -384,17 +385,23 @@
   }
 
   void SetSensitivityUp() {
-    if (CURRENT_SENSITIVITY == SENSITIVITY_INTERALS)
+    if (CURRENT_SENSITIVITY <= SENSITIVITY_INTERALS)
       return;
 
     CURRENT_SENSITIVITY -= SENSITIVITY_INTERALS;
+
+    Serial.print("Sense Up | ");
+    Serial.println(CURRENT_SENSITIVITY + OFFSET_SENSITIVITY);
   }
 
   void SetSensitivityDwn() {
-    if (CURRENT_SENSITIVITY == MAX_SENSITIVITY)
+    if (CURRENT_SENSITIVITY >= MAX_SENSITIVITY)
       return;
 
     CURRENT_SENSITIVITY += SENSITIVITY_INTERALS;
+
+    Serial.print("Sense Dwn | ");
+    Serial.println(CURRENT_SENSITIVITY + OFFSET_SENSITIVITY);
   }
 
   void RecordStopPlateHit() {
@@ -435,7 +442,7 @@
     Serial.print("Sensor: ");
     int piezoSensor = analogRead(IO_Sensor);    
     Serial.print(piezoSensor);
-    if (piezoSensor >= CURRENT_SENSITIVITY) {
+    if (piezoSensor >= (CURRENT_SENSITIVITY + OFFSET_SENSITIVITY)) {
       RecordStopPlateHit();
       Serial.print(" HIT REGISTERED");
     }
