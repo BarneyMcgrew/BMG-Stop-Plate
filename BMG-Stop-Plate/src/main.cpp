@@ -440,10 +440,14 @@
   }
 
   void CheckStopPlateHit() {
-    int piezoSensor = analogRead(IO_Sensor);
+    Serial.print("Sensor: ");
+    int piezoSensor = analogRead(IO_Sensor);    
+    Serial.print(piezoSensor);
     if (piezoSensor >= CURRENT_SENSITIVITY) {
       RecordStopPlateHit();
+      Serial.print(" HIT REGISTERED");
     }
+    Serial.println();
   }
 
 // REGION | State Functions
