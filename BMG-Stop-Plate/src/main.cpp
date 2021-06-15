@@ -169,12 +169,12 @@
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
-    oled.print("  SHOT       TIME(s)");
+    oled.print("SHOT     TIME(s)");
     oled.println();
     oled.println();
-    oled.set2X();
     oled.setFont(Arial_bold_14); 
     oled.print(" " + hitNo);
+    oled.set2X();
 
     if (seconds.length() == 3) {
       oled.print(" ");
@@ -182,9 +182,9 @@
       oled.print("  ");
     }
     
-    oled.print(" " + seconds);
-    oled.set1X();
+    oled.print("" + seconds);
     oled.println("." + centiSecond); 
+    oled.set1X();
     oled.println();
     oled.println();
     oled.setFont(Iain5x7);
@@ -226,21 +226,21 @@
     oled.clear();    
     oled.setFont(SystemFont5x7);
     oled.set1X();
-    oled.print("  SHOT       TIME(s)");
+    oled.print("SHOT     TIME(s)");
     oled.println();
     oled.println();
-    oled.set2X();
     oled.setFont(Arial_bold_14);
     oled.print(" " + hitNo);
+    oled.set2X();
 
     if (seconds.length() == 3) {
       oled.print(" ");
     } else {
-      oled.print("   ");
+      oled.print("  ");
     }
     oled.print(seconds);
-    oled.set1X();
-    oled.println("." + centiSecond);  
+    oled.println("." + centiSecond);
+    oled.set1X();  
     oled.println();
     oled.println();
     oled.setFont(Iain5x7);    
@@ -270,7 +270,7 @@
   }
 
   void SetTimerTiming() {
-    LedWhite();
+    LedRed();
     TS_Status = TimerStateTypes::TS_TIMING;
   }
 
