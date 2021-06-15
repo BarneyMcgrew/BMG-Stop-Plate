@@ -229,7 +229,6 @@
     oled.print("SHOT     TIME(s)");
     oled.println();
     oled.println();
-    //oled.set2X();
     oled.setFont(Arial_bold_14);
     oled.print(" " + hitNo);
     oled.set2X();
@@ -240,7 +239,6 @@
       oled.print("  ");
     }
     oled.print(seconds);
-    //oled.set1X();
     oled.println("." + centiSecond);
     oled.set1X();  
     oled.println();
