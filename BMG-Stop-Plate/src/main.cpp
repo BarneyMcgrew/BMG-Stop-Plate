@@ -1,29 +1,10 @@
 // REGION | Include
   #include <globalDefinitions.hpp>
   #include <statusTypes.hpp>
+  #include <globalInputs.hpp>
   #include <Wire.h>
   #include <SSD1306Ascii.h>
-  #include <SSD1306AsciiWire.h>
-  #include <FastLED.h>
   #include <EEPROM.h>
-
-// REGION | Global Inputs
-
-  const int PROGMEM BTN_Start = 2;
-  const int PROGMEM BTN_Stop = 3;
-  const int PROGMEM BTN_Forward = 4;
-  const int PROGMEM BTN_Back = 5;
-  const int PROGMEM BTN_SenseUp = 8;
-  const int PROGMEM BTN_SenseDw = 9;
-  const byte PROGMEM IO_Buzzer = 6;
-  const int PROGMEM IO_Sensor = A0;
-
-  bool SW_State_Start = false;
-  bool SW_State_Stop = false;
-  bool SW_State_Back = false;
-  bool SW_State_Forward = false;
-  bool SW_State_SenseUp = false;
-  bool SW_State_SenseDw = false;
 
 // REGION | Global Variables
 
@@ -515,6 +496,23 @@
 // REGION | Setup
 
   void setup() {
+    // Global Inputs Setup
+    // BTN_Start = 2;
+    // BTN_Stop = 3;
+    // BTN_Forward = 4;
+    // BTN_Back = 5;
+    // BTN_SenseUp = 8;
+    // BTN_SenseDw = 9;
+    // IO_Buzzer = 6;
+    // IO_Sensor = A0;
+
+    // SW_State_Start = false;
+    // SW_State_Stop = false;
+    // SW_State_Back = false;
+    // SW_State_Forward = false;
+    // SW_State_SenseUp = false;
+    // SW_State_SenseDw = false;
+
     // Serial Debug Setup
     Serial.begin(9600);
 
