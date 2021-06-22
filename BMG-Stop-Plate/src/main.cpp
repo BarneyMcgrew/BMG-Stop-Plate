@@ -75,6 +75,8 @@
   int CURRENT_SENSITIVITY = 200;
   int MAX_SENSITIVITY = 400; 
 
+  int HIT_SENSOR_DELAY = 200;
+
   int BUZZER_TIME = 750;
 
   bool LED_HIT_STAGE;
@@ -436,6 +438,8 @@
     Serial.println();
 
     DisplayTimeRecorded(hitNo, seconds, centiSecond);
+
+    delay(HIT_SENSOR_DELAY);
   }
 
   void CheckStopPlateHit() {
