@@ -4,6 +4,10 @@ The BMG Stop Plate (Barney McGrew Stop Plate) is a second generation iteration o
 
 This system is primarily designed for IPSC Action Air and adheres to the prescribed requirements of the rules.
 
+## Development
+
+The Stop Plate codebase is maintained and developed using Visual Studio Code and the PlatformIO plugin. Please ensure you have both the IDE and the plugin set up prior to checking out the codebase in this project.
+
 ## Features
 
 - Record a par time after start when the stop plate is struck by a projectile.
