@@ -15,6 +15,6 @@ To install the firmware to your device, follow the instructions in the README.tx
 
 ## License
 
-#MIT License
+# MIT License
 
 **Free Software, Hell Yeah!**
