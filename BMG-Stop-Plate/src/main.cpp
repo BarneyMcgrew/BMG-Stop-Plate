@@ -96,27 +96,27 @@
 // REGION | LED Functions
 
   void LedGreen() {  
-    leds[0] = CRGB::Green;
+    fill_solid(leds, NUM_LEDS, CRGB::Green);
     FastLED.show();
   }
 
   void LedBlue() {
-    leds[0] = CRGB::Blue;
+    fill_solid(leds, NUM_LEDS, CRGB::Blue);
     FastLED.show();
   }
 
   void LedWhite() {
-    leds[0] = CRGB::White;
+    fill_solid(leds, NUM_LEDS, CRGB::White);
     FastLED.show();
   }
 
   void LedRed() {
-    leds[0] = CRGB::Red;
+    fill_solid(leds, NUM_LEDS, CRGB::Red);
     FastLED.show();
   }
 
   void LedOrange() {
-    leds[0] = CRGB::Orange;
+    fill_solid(leds, NUM_LEDS, CRGB::Orange);
     FastLED.show();
   }
 
