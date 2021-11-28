@@ -9,8 +9,8 @@
   // 0X3C+SA0 - 0x3C or 0x3D
   #define I2C_ADDRESS 0x3C
   #define LED_DATA_PIN 7
-  #define NUM_LEDS 8
-  #define BRIGHTNESS 30
+  #define NUM_LEDS 1
+  #define BRIGHTNESS 255
   #define LED_TYPE WS2812
   #define COLOR_ORDER RGB  
   #define SENSITIVTY_EEPROM_ADDRESS 200
@@ -96,7 +96,6 @@
 // REGION | LED Functions
 
   void LedGreen() {  
-    //leds[0] = CRGB::Green;
     fill_solid(leds, NUM_LEDS, CRGB::Green);
     FastLED.show();
   }
