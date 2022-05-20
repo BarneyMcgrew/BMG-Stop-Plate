@@ -4,6 +4,8 @@ The BMG Stop Plate (Barney McGrew Stop Plate) is a second generation iteration o
 
 This system is primarily designed for IPSC Action Air and adheres to the prescribed requirements of the rules.
 
+![](https://www.barney-mcgrew.com/wp-content/uploads/2022/05/BMG-Stop-Plate-96-scaled.jpg)
+
 ## Development
 
 The Stop Plate codebase is maintained and developed using Visual Studio Code and the PlatformIO plugin. Please ensure you have both the IDE and the plugin set up prior to checking out the codebase in this project.
@@ -12,7 +14,7 @@ The Stop Plate codebase is maintained and developed using Visual Studio Code and
 
 - Record a par time after start when the stop plate is struck by a projectile.
 - Adjust the sensitivity of the PIEZO sensor for different environments and projectile velocities.
-- 
+- Change LED colours when detecting a hit on the stop plate and changing states between timer running and off.
 
 ## Installation
 To install the firmware to your device, follow the instructions in the README.txt file included in the firmware version that you intend to install on your ardiuno device.
