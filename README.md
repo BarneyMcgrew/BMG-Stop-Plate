@@ -17,6 +17,8 @@ The Stop Plate codebase is maintained and developed using Visual Studio Code and
 - Change LED colours when detecting a hit on the stop plate and changing states between timer running and off.
 
 ## Installation
+Check out the [wiki](https://github.com/BarneyMcgrew/BMG-Stop-Plate/wiki) for installation guides and more.
+
 To install the firmware to your device, follow the instructions in the README.txt file included in the firmware version that you intend to install on your ardiuno device.
 
 ## License
